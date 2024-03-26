@@ -6,15 +6,25 @@ async function init() {
   await consumer.connect();
 
   await consumer.subscribe({ topics: ["first-topic"], fromBeginning: true });
+await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      console.log('Received message', {
+        topic,
+        partition,
+        key: message.key.toString(),
+        value: message.value.toString()
+      })
+    }
+  });
 
-  await consumer.run({
+  /*await consumer.run({
     eachMessage: async ({ topic, partition, message, heartbeat, pause }) => {
       console.log(
         `${group}: [${topic}]: PART:${partition}:`,
         message.value.toString()
       );
     },
-  });
+  }); */
 }
 
 init();
